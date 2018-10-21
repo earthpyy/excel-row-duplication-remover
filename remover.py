@@ -65,9 +65,9 @@ def main(args: Namespace):
     print(f'Loading file {file_name}...')
     wb = load_workbook(filename=file_name)
     ws = wb.active
-    print(f'Finding duplication in column {args.column}...')
+    print(f'Finding duplication in column {args.column}...\n')
     rows_to_remove = find_duplication(ws, col=column, skip_row=skip_rows)
-    print(f'Reducing {len(rows_to_remove)} groups...')
+    print(f'\nReducing {len(rows_to_remove)} groups...')
     remove_rows(ws, info_list=rows_to_remove)
     print(f'Saving result file to {result_name}...')
     wb.save(result_name)
