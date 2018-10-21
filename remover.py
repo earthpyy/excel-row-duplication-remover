@@ -58,7 +58,7 @@ def main(args: Namespace):
     if len(args.column) == 1:  # TODO: support for column AA-AZ...
         column = ord(args.column) - ord('A')
     else:
-        print('Column name must length 1')
+        print('Column name length must be 1')
         return
 
     # laod worksheet
