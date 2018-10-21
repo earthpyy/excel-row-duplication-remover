@@ -1,3 +1,6 @@
+### Custom ###
+*.xlsx
+
 
 # Created by https://www.gitignore.io/api/python,visualstudiocode,macos
 
