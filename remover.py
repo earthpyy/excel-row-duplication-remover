@@ -15,7 +15,15 @@ def main(args: Namespace):
     def get_result_name(file_name: str):
         return file_name.replace('.xlsx', '_new.xlsx')
 
+    def remove_rows(ws, info_list: list):
+        to_minus = 0
+        for info in info_list:
+            ws.delete_rows(info['index'] - to_minus, info['count'])
+            to_minus += info['count']
+
     def find_duplication(ws, col: int = 0, skip_row: int = 1):
+        rows_to_remove = []
+
         count = -1
         start_row = 1 + skip_row
         rows = ws.iter_rows(min_row=start_row)
@@ -25,18 +33,23 @@ def main(args: Namespace):
                 continue
 
             last_row = ws[index + skip_row]
-            print(last_row[col].value, row[col].value, count)
-
             if last_row[col].value != row[col].value:
-                # remove duplication
-                ws.delete_rows(index - count + skip_row, count)
-                # reset count
-                count = 0
+                if count > 0:
+                    # remove duplication
+                    rows_to_remove.append({
+                        'index': index - count + skip_row,
+                        'count': count
+                    })
+                    # reset count
+                    count = 0
+                    print(f'Found \'{last_row[col].value}\'')
             else:
                 count += 1
 
-            if index == 25:
+            if index == 50:
                 break
+
+        return rows_to_remove
 
     # parse arguments
     file_name = args.file_name
@@ -53,7 +66,9 @@ def main(args: Namespace):
     wb = load_workbook(filename=file_name)
     ws = wb.active
     print(f'Finding duplication in column {args.column}...')
-    find_duplication(ws, col=column, skip_row=skip_rows)
+    rows_to_remove = find_duplication(ws, col=column, skip_row=skip_rows)
+    print(f'Reducing {len(rows_to_remove)} groups...')
+    remove_rows(ws, info_list=rows_to_remove)
     print(f'Saving result file to {result_name}...')
     wb.save(result_name)
 
