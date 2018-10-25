@@ -44,7 +44,19 @@ def main(args: Namespace):
                     count = 0
                     print(f'Found \'{last_row[col].value}\'')
             else:
-                count += 1
+                try:
+                    last = ws[index + skip_row + 2]
+                    count += 1
+                except IndexError:
+                    if count > 0:
+                        # remove duplication
+                        rows_to_remove.append({
+                            'index': index - count + skip_row,
+                            'count': count
+                        })
+                        # reset count
+                        count = 0
+                        print(f'Found \'{last_row[col].value}\'')
 
         return rows_to_remove
 
