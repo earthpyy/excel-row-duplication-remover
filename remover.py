@@ -46,9 +46,6 @@ def main(args: Namespace):
             else:
                 count += 1
 
-            if index == 50:
-                break
-
         return rows_to_remove
 
     # parse arguments
